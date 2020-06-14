@@ -7,23 +7,29 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 public class InGame extends AppCompatActivity {
 
     Button up, down, left, right;
-    ImageView player;
+    ImageView player, goal;
 
     int width;
     int height;
     int distY;
     int distX;
 
+    private Chronometer chronometer;
+    private boolean running;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_game);
+
+        chronometer = (Chronometer) findViewById(R.id.time);
 
         up = (Button) findViewById(R.id.up);
         down = (Button) findViewById(R.id.down);
@@ -31,6 +37,7 @@ public class InGame extends AppCompatActivity {
         right = (Button) findViewById(R.id.right);
 
         player = (ImageView) findViewById(R.id.player);
+        goal = (ImageView) findViewById(R.id.goal);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -38,8 +45,15 @@ public class InGame extends AppCompatActivity {
         width = size.x;
         height = size.y;
 
-        distX = width/6;
-        distY = height/10;
+        distX = width/12;
+        distY = height/20;
+
+        setGoal(goal);
+
+        if(!running) {
+            chronometer.start();
+            running = true;
+        }
 
         up.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,11 +92,12 @@ public class InGame extends AppCompatActivity {
     public void moveEvent(ImageView player, String rotate) {
         System.out.println(player.getX());
         System.out.println(player.getY());
-        if(player.getY() > distY*5 || player.getY() < 0 || player.getX() > distX*5 || player.getX() < 0) {
+        if(player.getY() > distY*10 || player.getY() < 0 || player.getX() > distX*10 || player.getX() < 0) {
             undo(player, rotate);
             return;
         }
         wall(player, rotate, player.getX(), player.getY());
+        finish(player, goal);
     }
 
     public void wall(ImageView player, String rotate, float x, float y) {
@@ -107,4 +122,17 @@ public class InGame extends AppCompatActivity {
                     "알 수 없는 오류", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void setGoal(ImageView goal) {
+        goal.setX(distX*10);
+        goal.setY(distY*10);
+    }
+
+    public void finish(ImageView player, ImageView goal) {
+        if(player.getX() == goal.getX() && player.getY() == player.getY()) {
+            chronometer.stop();
+            running=false;
+        }
+    }
+
 }

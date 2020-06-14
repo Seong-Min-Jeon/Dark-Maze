@@ -14,7 +14,7 @@
         android:orientation="vertical">
 
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="8">
@@ -25,7 +25,13 @@
                 android:src="@drawable/player"
                 android:id="@+id/player"/>
 
-        </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/player"
+                android:id="@+id/goal"/>
+
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,8 +76,15 @@
                 android:layout_marginTop="25dp"
                 android:layout_marginLeft="80dp"
                 android:text="DOWN"
-                android:id="@+id/down"/>
+                android:id="@+id/down" />
 
+
+            <Chronometer
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/time"
+                android:layout_gravity="right"
+                android:layout_marginRight="50dp"/>
 
         </LinearLayout>
 
