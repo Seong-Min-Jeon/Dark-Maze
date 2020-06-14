@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
@@ -51,6 +52,7 @@ public class InGame extends AppCompatActivity {
         setGoal(goal);
 
         if(!running) {
+            chronometer.setBase(SystemClock.elapsedRealtime());
             chronometer.start();
             running = true;
         }
@@ -90,8 +92,6 @@ public class InGame extends AppCompatActivity {
     }
 
     public void moveEvent(ImageView player, String rotate) {
-        System.out.println(player.getX());
-        System.out.println(player.getY());
         if(player.getY() > distY*10 || player.getY() < 0 || player.getX() > distX*10 || player.getX() < 0) {
             undo(player, rotate);
             return;
@@ -129,9 +129,11 @@ public class InGame extends AppCompatActivity {
     }
 
     public void finish(ImageView player, ImageView goal) {
-        if(player.getX() == goal.getX() && player.getY() == player.getY()) {
+        if(player.getX() == goal.getX() && player.getY() == goal.getY()) {
             chronometer.stop();
             running=false;
+            int clearTime = (int) (SystemClock.elapsedRealtime()-chronometer.getBase());
+            System.out.println(String.valueOf(clearTime) + "time");
         }
     }
 
