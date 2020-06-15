@@ -55,8 +55,8 @@ public class InGame extends AppCompatActivity {
         width = size.x;
         height = size.y;
 
-        distX = width/12;
-        distY = height/20;
+        distX = width/24;
+        distY = height/40;
 
         //맵 랜덤 생성
         map();
@@ -107,7 +107,7 @@ public class InGame extends AppCompatActivity {
     }
 
     public void moveEvent(ImageView player, String rotate) {
-        if(player.getY() > distY*10 || player.getY() < 0 || player.getX() > distX*10 || player.getX() < 0) {
+        if(player.getY() > distY*20 || player.getY() < 0 || player.getX() > distX*20 || player.getX() < 0) {
             undo(player, rotate);
             return;
         }
@@ -116,10 +116,6 @@ public class InGame extends AppCompatActivity {
     }
 
     public void wall(ImageView player, String rotate, float x, float y) {
-//        if(x == distX && y == distY) {
-//            undo(player, rotate);
-//            return;
-//        }
         int xNum;
         int yNum;
         if(distX == 0) {
@@ -171,8 +167,8 @@ public class InGame extends AppCompatActivity {
     public void map() {
         String num1;
         String num2;
-        for(int i = 0 ; i < 11 ; i++) {
-            for(int j = 0 ; j < 11 ; j++) {
+        for(int i = 0 ; i < 21 ; i++) {
+            for(int j = 0 ; j < 21 ; j++) {
                 if(i < 10) {
                     num1 = ("0" + i);
                 } else {
@@ -188,30 +184,30 @@ public class InGame extends AppCompatActivity {
         }
         list.remove("0000");
         String current = "0000";
-        String goal = "1010";
+        String goal = "2020";
         String move;
         int[] chars = new int[4];
         char[] ary;
         while(true) {
-            int p = rnd.nextInt(4);
+            int p = rnd.nextInt(2);
             switch (p) {
                 case 0:
                     ary = current.toCharArray();
                     for (int i = 0; i < 4; i++) {
                         chars[i] = Character.getNumericValue(ary[i]);
                     }
-                    if (chars[2] == 0) {
-                        if (chars[3] != 9) {
-                            chars[3] += 1;
-                        } else {
-                            chars[2] = 1;
-                            chars[3] = 0;
-                        }
+                    if(chars[3] == 9) {
+                        chars[2]++;
+                        chars[3] = 0;
+                    } else {
+                        chars[3]++;
                     }
                     move = Integer.toString(chars[0]) + chars[1] + chars[2] + chars[3];
-                    System.out.println("move1: " + move);
+                    System.out.println("move1: " + current + "->" + move);
                     if (list.contains(move)) {
                         list.remove(move);
+                    }
+                    if(!(chars[2]==2 && chars[3] > 0)) {
                         current = move;
                     }
                     break;
@@ -220,54 +216,18 @@ public class InGame extends AppCompatActivity {
                     for (int i = 0; i < 4; i++) {
                         chars[i] = Character.getNumericValue(ary[i]);
                     }
-                    if (chars[0] == 0) {
-                        if (chars[1] != 9) {
-                            chars[1]++;
-                        } else {
-                            chars[0] = 1;
-                            chars[1] = 0;
-                        }
+                    if(chars[1] == 9) {
+                        chars[0]++;
+                        chars[1] = 0;
+                    } else {
+                        chars[1]++;
                     }
                     move = Integer.toString(chars[0]) + chars[1] + chars[2] + chars[3];
-                    System.out.println("move2: " + move);
+                    System.out.println("move2: " + current + "->" + move);
                     if (list.contains(move)) {
                         list.remove(move);
-                        current = move;
                     }
-                    break;
-                case 2:
-                    ary = current.toCharArray();
-                    for (int i = 0; i < 4; i++) {
-                        chars[i] = Character.getNumericValue(ary[i]);
-                    }
-                    if (!(chars[3] == 0 && chars[2] == 0)) {
-                        if (chars[2] == 1) {
-                            chars[2] = 0;
-                            chars[3] = 9;
-                        }
-                    }
-                    move = Integer.toString(chars[0]) + chars[1] + chars[2] + chars[3];
-                    System.out.println("move3: " + move);
-                    if (list.contains(move)) {
-                        list.remove(move);
-                        current = move;
-                    }
-                    break;
-                case 3:
-                    ary = current.toCharArray();
-                    for (int i = 0; i < 4; i++) {
-                        chars[i] = Character.getNumericValue(ary[i]);
-                    }
-                    if (!(chars[1] == 0 && chars[0] == 0)) {
-                        if (chars[0] == 1) {
-                            chars[0] = 0;
-                            chars[1] = 9;
-                        }
-                    }
-                    move = Integer.toString(chars[0]) + chars[1] + chars[2] + chars[3];
-                    System.out.println("move4: " + move);
-                    if (list.contains(move)) {
-                        list.remove(move);
+                    if(!(chars[0]==2 && chars[1] > 0)) {
                         current = move;
                     }
                     break;
@@ -276,11 +236,16 @@ public class InGame extends AppCompatActivity {
                 break;
             }
         }
+        int size = list.size();
+        for(int _ = 0 ; _ < 100 ; _++) {
+            size = list.size();
+            list.remove(rnd.nextInt(size-2));
+        }
     }
 
     public void setGoal(ImageView goal) {
-        goal.setX(distX*10);
-        goal.setY(distY*10);
+        goal.setX(distX*20);
+        goal.setY(distY*20);
     }
 
     public void finish(ImageView player, ImageView goal) {
