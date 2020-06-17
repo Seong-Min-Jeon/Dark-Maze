@@ -13,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class InGame extends AppCompatActivity {
@@ -141,8 +144,6 @@ public class InGame extends AppCompatActivity {
             coor += yNum;
         }
 
-        System.out.println(coor);
-
         if(list.contains(coor)) {
             undo(player, rotate);
         }
@@ -184,60 +185,101 @@ public class InGame extends AppCompatActivity {
         }
         list.remove("0000");
         String current = "0000";
-        String goal = "2020";
-        String move;
-        int[] chars = new int[4];
-        char[] ary;
-        while(true) {
-            int p = rnd.nextInt(2);
-            switch (p) {
-                case 0:
-                    ary = current.toCharArray();
-                    for (int i = 0; i < 4; i++) {
-                        chars[i] = Character.getNumericValue(ary[i]);
-                    }
-                    if(chars[3] == 9) {
-                        chars[2]++;
-                        chars[3] = 0;
-                    } else {
-                        chars[3]++;
-                    }
-                    move = Integer.toString(chars[0]) + chars[1] + chars[2] + chars[3];
-                    System.out.println("move1: " + current + "->" + move);
-                    if (list.contains(move)) {
-                        list.remove(move);
-                    }
-                    if(!(chars[2]==2 && chars[3] > 0)) {
-                        current = move;
-                    }
-                    break;
-                case 1:
-                    ary = current.toCharArray();
-                    for (int i = 0; i < 4; i++) {
-                        chars[i] = Character.getNumericValue(ary[i]);
-                    }
-                    if(chars[1] == 9) {
-                        chars[0]++;
-                        chars[1] = 0;
-                    } else {
-                        chars[1]++;
-                    }
-                    move = Integer.toString(chars[0]) + chars[1] + chars[2] + chars[3];
-                    System.out.println("move2: " + current + "->" + move);
-                    if (list.contains(move)) {
-                        list.remove(move);
-                    }
-                    if(!(chars[0]==2 && chars[1] > 0)) {
-                        current = move;
-                    }
-                    break;
+        ArrayList<String> rotate = new ArrayList<>();
+        for(int i  = 0 ; i < 30 ; i++) {
+            rotate.add("R");
+        }
+        for(int i  = 0 ; i < 30 ; i++) {
+            rotate.add("D");
+        }
+        for(int i  = 0 ; i < 10 ; i++) {
+            rotate.add("L");
+        }
+        for(int i  = 0 ; i < 10 ; i++) {
+            rotate.add("U");
+        }
+        Collections.shuffle(rotate);
+        while(rotate.size() != 0) {
+            String direction = rotate.remove(rotate.size()-1);
+            int[] loc = new int[4];
+            char[] chars;
+            chars = current.toCharArray();
+            for(int i = 0 ; i < 4 ; i++) {
+                loc[i] = Character.getNumericValue(chars[i]);
             }
-            if (current.equals(goal)) {
-                break;
+            switch (direction) {
+                case "R":
+                    if(loc[0] == 2) {
+                        rotate.add(rotate.get(0));
+                        rotate.set(0, direction);
+                        continue;
+                    }
+                    if(loc[1] == 9) {
+                        loc[0]++;
+                        loc[1] = 0;
+                    } else {
+                        loc[1]++;
+                    }
+                    current = Integer.toString(loc[0]) + loc[1] + loc[2] + loc[3];
+                    if(list.contains(current)) {
+                        list.remove(current);
+                    }
+                    break;
+                case "D":
+                    if(loc[2] == 2) {
+                        rotate.add(rotate.get(0));
+                        rotate.set(0, direction);
+                        continue;
+                    }
+                    if(loc[3] == 9) {
+                        loc[2]++;
+                        loc[3] = 0;
+                    } else {
+                        loc[3]++;
+                    }
+                    current = Integer.toString(loc[0]) + loc[1] + loc[2] + loc[3];
+                    if(list.contains(current)) {
+                        list.remove(current);
+                    }
+                    break;
+                case "L":
+                    if(loc[0] == 0 && loc[1] == 0) {
+                        rotate.add(rotate.get(0));
+                        rotate.set(0, direction);
+                        continue;
+                    }
+                    if(loc[1] == 0) {
+                        loc[0]--;
+                        loc[1] = 9;
+                    } else {
+                        loc[1]--;
+                    }
+                    current = Integer.toString(loc[0]) + loc[1] + loc[2] + loc[3];
+                    if(list.contains(current)) {
+                        list.remove(current);
+                    }
+                    break;
+                case "U":
+                    if(loc[2] == 0 && loc[3] == 0) {
+                        rotate.add(rotate.get(0));
+                        rotate.set(0, direction);
+                        continue;
+                    }
+                    if(loc[3] == 0) {
+                        loc[2]--;
+                        loc[3] = 9;
+                    } else {
+                        loc[3]--;
+                    }
+                    current = Integer.toString(loc[0]) + loc[1] + loc[2] + loc[3];
+                    if(list.contains(current)) {
+                        list.remove(current);
+                    }
+                    break;
             }
         }
         int size = list.size();
-        for(int _ = 0 ; _ < 100 ; _++) {
+        for(int _ = 0 ; _ < 80 ; _++) {
             size = list.size();
             list.remove(rnd.nextInt(size-2));
         }
