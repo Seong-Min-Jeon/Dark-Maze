@@ -3,19 +3,19 @@ package com.example.mobileprogramming;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button start;
-
+    ImageButton start, exit, about;
     MediaPlayer player;
 
     @Override
@@ -23,18 +23,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        start = (Button) findViewById(R.id.start);
+        //action bar color
+        ColorDrawable colorDrawable
+                = new ColorDrawable(Color.parseColor("#000000"));
+        getSupportActionBar().setBackgroundDrawable(colorDrawable);
+        getSupportActionBar().setTitle("");
 
+        //버튼
+        start = (ImageButton) findViewById(R.id.start);
+        exit = (ImageButton) findViewById(R.id.exit);
+        about = (ImageButton) findViewById(R.id.about);
+
+        //player music
         stopPlayer();
         player = MediaPlayer.create(this, R.raw.music1);
         player.start();
 
         start.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View View) {
                 Intent intent = new Intent(MainActivity.this, InGame.class);
                 startActivity(intent);
+            }
+        });
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View View) {
+                finish();
             }
         });
 
